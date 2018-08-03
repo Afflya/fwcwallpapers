@@ -12,7 +12,15 @@ interface PixabayApiService {
         const val BASE_URL = "https://pixabay.com/api/"
     }
 
-    @GET("?key=$API_KEY&image_type=all&per_page=200&category=sports")
+    /**
+     *
+     * Search for images
+     *
+     * @param term - string you want to search for
+     * @return [ApiResponse] with list of [PixabayImage]
+     *
+     */
+    @GET("?key=$API_KEY&image_type=all&per_page=200")
     fun getImages(@Query("q") term: String): Call<ApiResponse<PixabayImage>>
 
 }

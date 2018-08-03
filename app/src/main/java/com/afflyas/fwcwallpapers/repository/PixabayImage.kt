@@ -4,6 +4,14 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
+/**
+ *
+ * Object that contains general information about image provided by Pixabay api
+ *
+ * Implemented [Parcelable] to be able to put objects into Bundle and pass it
+ * as argument when navigating to [ImageFragment]
+ *
+ */
 class PixabayImage : Parcelable{
 
     @SerializedName("id") val id: Int

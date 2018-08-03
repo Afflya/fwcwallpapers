@@ -1,45 +1,38 @@
 package com.afflyas.fwcwallpapers.utils
 
-import android.content.Context
 import android.graphics.Bitmap
-import com.afflyas.fwcwallpapers.core.MainActivity
 import android.util.DisplayMetrics
-import android.opengl.ETC1.getHeight
-import android.opengl.ETC1.getWidth
-import android.content.Context.WINDOW_SERVICE
-import androidx.core.content.ContextCompat.getSystemService
-import android.view.WindowManager
-import android.view.Display
-
-
-
-
+import com.afflyas.fwcwallpapers.core.MainActivity
 
 
 object WallpaperHelper {
-
+    /**
+     * Setup wallpaper bitmap to crop from centre
+     *
+     * Source:
+     * https://stackoverflow.com/questions/25699168/set-wallpaper-with-bitmap-avoid-crop-and-set-fit-center
+     */
     fun cropBitmapFromCenterAndScreenSize(mainActivity: MainActivity, bitmap: Bitmap): Bitmap {
         var bitmap = bitmap
-        val bitmap_width = bitmap.width.toFloat()
-        val bitmap_height = bitmap
-                .height.toFloat()
+        val bitmapWidth = bitmap.width.toFloat()
+        val bitmapHeight = bitmap.height.toFloat()
 
         val displayMetrics = DisplayMetrics()
         mainActivity.windowManager.defaultDisplay.getMetrics(displayMetrics)
         val screenHeight = displayMetrics.heightPixels
         val screenWidth = displayMetrics.widthPixels
 
-        val bitmap_ratio = bitmap_width / bitmap_height
-        val screen_ratio = screenWidth / screenHeight
+        val bitmapRatio = bitmapWidth / bitmapHeight
+        val screenRatio = screenWidth / screenHeight
         val bitmapNewWidth: Int
         val bitmapNewHeight: Int
 
-        if (screen_ratio > bitmap_ratio) {
+        if (screenRatio > bitmapRatio) {
             bitmapNewWidth = screenWidth
-            bitmapNewHeight = (bitmapNewWidth / bitmap_ratio).toInt()
+            bitmapNewHeight = (bitmapNewWidth / bitmapRatio).toInt()
         } else {
             bitmapNewHeight = screenHeight
-            bitmapNewWidth = (bitmapNewHeight * bitmap_ratio).toInt()
+            bitmapNewWidth = (bitmapNewHeight * bitmapRatio).toInt()
         }
 
         bitmap = Bitmap.createScaledBitmap(bitmap, bitmapNewWidth,

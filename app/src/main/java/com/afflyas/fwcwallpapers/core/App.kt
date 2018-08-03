@@ -19,8 +19,6 @@ class App : Application(), HasActivityInjector {
     override fun onCreate() {
         super.onCreate()
 
-        //Log.d(App.DEV_TAG, javaClass.simpleName + " onCreate()")
-
         //init Dagger injections
         DaggerAppComponent
                 .builder()

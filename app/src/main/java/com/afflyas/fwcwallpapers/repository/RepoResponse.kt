@@ -1,5 +1,9 @@
 package com.afflyas.fwcwallpapers.repository
 
+/**
+ * Object that contains response of executing api request and its current status
+ *
+ */
 class RepoResponse<T>(private val status: RepoResponseStatus, private val data: T?) {
 
     fun getStatus(): RepoResponseStatus {

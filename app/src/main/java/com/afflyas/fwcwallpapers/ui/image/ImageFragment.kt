@@ -16,11 +16,16 @@ import javax.inject.Inject
 import android.app.WallpaperManager
 import com.bumptech.glide.request.target.SimpleTarget
 import android.R.attr.path
+import android.os.Build
 import android.widget.Toast
 import com.afflyas.fwcwallpapers.utils.WallpaperHelper
 import com.bumptech.glide.request.transition.Transition
 
-
+/**
+ *
+ * Fragment for display [PixabayImage] in fullscreen and set the wallpaper
+ *
+ */
 class ImageFragment : Fragment() {
 
     private lateinit var fragmentBinding: FragmentImageBinding
@@ -44,6 +49,12 @@ class ImageFragment : Fragment() {
         fragmentBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_image, container, false)
         fragmentBinding.image = ImageFragmentArgs.fromBundle(arguments).image
 
+        //Show toolbar above other elements for android 4.*
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+            fragmentBinding.appBar.bringToFront()
+        }
+
+
         mainActivity.setSupportActionBar(fragmentBinding.toolbar)
 
         val actionBar = mainActivity.supportActionBar
@@ -53,8 +64,6 @@ class ImageFragment : Fragment() {
         }
         setHasOptionsMenu(true)
 
-
-
         mVisible = true
 
         // Set up the user interaction to manually show or hide the system UI.
@@ -63,6 +72,9 @@ class ImageFragment : Fragment() {
         return fragmentBinding.root
     }
 
+    /**
+     * Toogle fullscreen
+     */
     override fun onResume() {
         super.onResume()
         toggle()
@@ -76,31 +88,35 @@ class ImageFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.itemApply -> {
-                Glide.with(this).load(fragmentBinding.image!!.largeImageURL)
-
-                Glide.with(this)
-                        .asBitmap()
-                        .load(fragmentBinding.image!!.largeImageURL)
-                        .into(object : SimpleTarget<Bitmap>() {
-                            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                                val wm = WallpaperManager.getInstance(mainActivity)
-
-
-				
-
-                                wm.setBitmap(WallpaperHelper.cropBitmapFromCenterAndScreenSize(mainActivity, resource))
-                            }
-                        })
-
-                Toast.makeText(mainActivity, R.string.done, Toast.LENGTH_SHORT).show()
+                setWallpaper()
             }
             android.R.id.home -> mainActivity.onBackPressed()
         }
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * Set wallpaper and show toast message after its done
+     */
+    fun setWallpaper(){
+        Glide.with(this)
+                .asBitmap()
+                .load(fragmentBinding.image!!.largeImageURL)
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        val wm = WallpaperManager.getInstance(mainActivity)
+                        wm.setBitmap(WallpaperHelper.cropBitmapFromCenterAndScreenSize(mainActivity, resource))
+                    }
+                })
+
+        Toast.makeText(mainActivity, R.string.done, Toast.LENGTH_SHORT).show()
+    }
+
     private var mVisible: Boolean = false
 
+    /**
+     * Toogle UI and system bars visibility
+     */
     private fun toggle() {
         if (mVisible) {
             hide()
@@ -109,6 +125,9 @@ class ImageFragment : Fragment() {
         }
     }
 
+    /**
+     * Hide UI and system bars
+     */
     private fun hide() {
         // Hide UI first
         fragmentBinding.uiIsVisible = false
@@ -125,6 +144,9 @@ class ImageFragment : Fragment() {
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
     }
 
+    /**
+     * Show UI and system bars
+     */
     private fun show() {
         // Show the system bar
         fragmentBinding.coordinator.systemUiVisibility =

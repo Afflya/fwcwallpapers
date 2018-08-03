@@ -32,21 +32,30 @@ class ListImagesAdapter(private val onItemClickCallback: ItemClickCallback) : Re
         return images?.size ?: 0
     }
 
-    fun setImagesList(newMovies: List<PixabayImage>?) {
-        if (newMovies == null || newMovies.isEmpty()) {
+    /**
+     *
+     * Set items data set or destroy all items if new list is empty/null
+     *
+     * @param newImages - new list of [PixabayImage] to display in the view
+     */
+    fun setImagesList(newImages: List<PixabayImage>?) {
+        if (newImages == null || newImages.isEmpty()) {
             images = null
             notifyItemRangeInserted(0, 0)
         } else {
             if(images == null || images!!.isEmpty()){
-                images = newMovies
+                images = newImages
                 notifyDataSetChanged()
             }else{
-                val diffResult = DiffUtil.calculateDiff(ListImagesDiffUtilsCallback(images!!,newMovies))
+                val diffResult = DiffUtil.calculateDiff(ListImagesDiffUtilsCallback(images!!,newImages))
                 diffResult.dispatchUpdatesTo(this)
             }
         }
     }
 
+    /**
+     * set corresponding [PixabayImage] object to item
+     */
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val image = images?.get(position)
         if (image != null) {

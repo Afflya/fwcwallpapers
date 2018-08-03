@@ -1,13 +1,18 @@
 package com.afflyas.fwcwallpapers.ui.listimages
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel;
-import com.afflyas.fwcwallpapers.R.string.search
+import androidx.lifecycle.ViewModel
 import com.afflyas.fwcwallpapers.repository.PixabayImage
 import com.afflyas.fwcwallpapers.repository.PixabayImagesRepository
 import com.afflyas.fwcwallpapers.repository.RepoResponse
 import javax.inject.Inject
 
+/**
+ *
+ * ViewModel that stores String to search
+ * and api response as LiveData
+ *
+ */
 class ListImagesViewModel @Inject constructor(private val pixabayImagesRepository: PixabayImagesRepository) : ViewModel() {
 
     val term = MutableLiveData<String>()

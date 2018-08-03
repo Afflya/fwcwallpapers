@@ -22,7 +22,6 @@ import com.afflyas.fwcwallpapers.ui.common.RetryCallback
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 import androidx.recyclerview.widget.GridLayoutManager
-import com.afflyas.fwcwallpapers.R.id.recyclerView
 
 
 
@@ -55,10 +54,6 @@ class ListImagesFragment : Fragment(), RetryCallback, ItemClickCallback {
                               savedInstanceState: Bundle?): View? {
         fragmentBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_list_images, container, false)
         fragmentBinding.callback = this
-
-        //mainActivity.setSupportActionBar(fragmentBinding.toolbar)
-        //setHasOptionsMenu(true)
-
         return fragmentBinding.root
     }
 
@@ -68,10 +63,16 @@ class ListImagesFragment : Fragment(), RetryCallback, ItemClickCallback {
         subscribeUI()
     }
 
+    /**
+     * set adapter to recyclerView
+     *
+     * subscribe searchView to text submit. Call new search request after it is happen
+     *
+     * subscribe observer for search result
+     * to change data in the view's binding and searchAdapter
+     *
+     */
     private fun subscribeUI() {
-
-
-
 
         fragmentBinding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(p0: String): Boolean {
@@ -105,10 +106,29 @@ class ListImagesFragment : Fragment(), RetryCallback, ItemClickCallback {
         }
     }
 
+    /**
+     * Expand appBar when fragment resumes
+     */
+    override fun onResume() {
+        super.onResume()
+        fragmentBinding.appBar.setExpanded(true)
+    }
+
+    /**
+     * call to repeat search request
+     *
+     * Retry button displayed only when api request was failed or empty
+     */
     override fun retry() {
         mViewModel.refresh()
     }
 
+    /**
+     * Navigate to [ImageFragment]
+     * after clicking one of the RecyclerView's items
+     *
+     * [PixabayImage] object that represents clicked item is passed as an argument
+     */
     override fun onItemClick(pixabayImage: PixabayImage) {
         val action = ListImagesFragmentDirections.actionListImagesFragmentToImageFragment(pixabayImage)
         NavHostFragment.findNavController(this).navigate(action)

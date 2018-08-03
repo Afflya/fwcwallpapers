@@ -3,6 +3,11 @@ package com.afflyas.fwcwallpapers.ui.listimages
 import androidx.recyclerview.widget.DiffUtil
 import com.afflyas.fwcwallpapers.repository.PixabayImage
 
+/**
+ *
+ * Used by [ListImagesAdapter] to calculate difference between lists
+ *
+ */
 class ListImagesDiffUtilsCallback(private val oldImagesList: List<PixabayImage>, private val newImagesList: List<PixabayImage>) : DiffUtil.Callback() {
 
 
